@@ -8,6 +8,7 @@ import {
 
 import {
     Button,
+    Icon
 } from 'native-base';
 
 
@@ -43,10 +44,14 @@ export default class Note extends Component {
     }
 
     _handleAddButton = () => {
-        let newTaskName = this.state.text
-        let id = this.state.noteArray.length + 1
-        const inputBaru = { "id": id, "task": newTaskName }
-        this.setState({ noteArray: [...this.state.noteArray, inputBaru], text: '' })
+        if (this.state.text != '') {
+            let newTaskName = this.state.text
+            let id = this.state.noteArray.length + 1
+            const inputBaru = { "id": id, "task": newTaskName }
+            this.setState({ noteArray: [...this.state.noteArray, inputBaru], text: '' })
+        } else {
+            alert("Task tidak boleh kosong")
+        }
     }
 
     render() {
