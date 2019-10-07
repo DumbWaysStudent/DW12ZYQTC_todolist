@@ -54,6 +54,12 @@ export default class Note extends Component {
         }
     }
 
+    _delButton = (taskDiHapus) => {
+        const { noteArray } = this.state
+        const filterCek = noteArray.filter(function (list) { return list.id != taskDiHapus.id })
+        this.setState({ noteArray: filterCek })
+    }
+
     render() {
         return (
             <View style={styles.container}>
@@ -72,6 +78,7 @@ export default class Note extends Component {
                         return (
                             <View key={list.id} style={styles.listNote}>
                                 <Text style={styles.fontNote}>{list.task}</Text>
+                                <Icon onPress={() => this._delButton(list)} style={styles.iconTrash} name="trash" />
                             </View>
                         )
                     })}
@@ -88,7 +95,8 @@ const styles = StyleSheet.create({
     listNote: {
         borderWidth: 1,
         alignItems: "flex-start",
-        justifyContent: "center"
+        justifyContent: "space-between",
+        flexDirection: "row"
     },
     fontNote: {
         fontSize: 20,
@@ -110,6 +118,11 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         height: 40,
         backgroundColor: "#a8ff41"
+    },
+    iconTrash: {
+        paddingRight: 10,
+        paddingTop: 10,
+        color: 'red'
     }
 })
 
