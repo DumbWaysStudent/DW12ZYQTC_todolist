@@ -9,7 +9,8 @@ import {
 import {
     Button,
     Icon,
-    CheckBox
+    CheckBox,
+    Right
 } from 'native-base';
 
 
@@ -45,7 +46,10 @@ export default class Note extends Component {
                     isDone: false
                 },
             ],
-            text: ''
+            text: '',
+            id: '',
+            editText: '',
+            edit: false
         }
     }
 
@@ -75,18 +79,49 @@ export default class Note extends Component {
         }
     }
 
+    _handleEditList = (newEditData) => {
+        const { noteArray } = this.state
+        let id = noteArray.indexOf(newEditData)
+        this.setState({ edit: newEditData.task, edit: true, id: id })
+    }
+
+    _handleChangeEdit = () => {
+        const { noteArray, id, editText } = this.state
+        noteArray[id].task = editText
+        this.setState([...noteArray])
+        this.setState({ text: '', edit: false, editText: '' })
+    }
+
     render() {
         return (
             <View style={styles.container}>
-                <View style={styles.inputContainer}>
-                    <TextInput
-                        style={styles.inputText}
-                        value={this.state.text}
-                        placeholder="Add new task"
-                        onChangeText={text => this.setState({ text })} />
-
-                    <Button onPress={() => this._handleAddButton()} style={styles.btnAdd}><Text>Add</Text></Button>
-                </View>
+                {this.state.edit ?
+                    <View style={styles.inputContainer}>
+                        <TextInput
+                            style={styles.inputText}
+                            value={this.state.editText}
+                            onChangeText={text => this.setState({ editText: text })}
+                        />
+                        <Button
+                            onPress={() => this._handleChangeEdit()}
+                            style={styles.btnAdd}>
+                            <Text>Change</Text>
+                        </Button>
+                    </View> :
+                    <View style={styles.inputContainer}>
+                        <TextInput
+                            style={styles.inputText}
+                            value={this.state.text}
+                            placeholder="New Todo"
+                            onChangeText={text => this.setState({ text })}
+                        />
+                        <Button
+                            onPress={() => this._handleAddBtn()}
+                            style={styles.btnAdd}>
+                            <Text>Add</Text>
+                        </Button>
+                    </View>
+                }
 
                 <View>
                     {this.state.noteArray.map(list => {
@@ -94,9 +129,13 @@ export default class Note extends Component {
                             <View key={list.id} style={styles.listNote}>
                                 <View style={styles.checkboxList}>
                                     <CheckBox checked={list.isDone} onPress={() => this._handlePressCheckBox(list)} />
+                                    <Text style={styles.fontNote}>{list.task}</Text>
                                 </View>
-                                <Text style={styles.fontNote}>{list.task}</Text>
-                                <Icon onPress={() => this._delButton(list)} style={styles.iconTrash} name="trash" />
+                                <View style={styles.iconContainer}>
+                                    <Icon onPress={() => this._handleEditList(list)}
+                                        style={styles.iconEdit} name="create" />
+                                    <Icon onPress={() => this._delButton(list)} style={styles.iconTrash} name="trash" />
+                                </View>
                             </View>
                         )
                     })}
@@ -118,7 +157,7 @@ const styles = StyleSheet.create({
     },
     fontNote: {
         fontSize: 20,
-        padding: 10
+        padding: 20
     },
     inputContainer: {
         flexDirection: "row",
@@ -138,16 +177,22 @@ const styles = StyleSheet.create({
         backgroundColor: "#a8ff41"
     },
     iconTrash: {
-        paddingRight: 10,
-        paddingTop: 10,
         color: 'red'
     },
     checkboxList: {
         flexDirection: "row",
         alignItems: "center",
-        paddingTop: 12
+    },
+    iconEdit: {
+        color: 'green',
+        right: 8
+    },
+    iconContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        paddingRight: 10,
+        paddingTop: 20,
     }
-
 })
 
 
