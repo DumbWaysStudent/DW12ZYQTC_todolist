@@ -116,7 +116,7 @@ export default class Note extends Component {
                             onChangeText={text => this.setState({ text })}
                         />
                         <Button
-                            onPress={() => this._handleAddBtn()}
+                            onPress={() => this._handleAddButton()}
                             style={styles.btnAdd}>
                             <Text>Add</Text>
                         </Button>
