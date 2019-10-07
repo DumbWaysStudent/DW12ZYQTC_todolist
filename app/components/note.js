@@ -8,7 +8,8 @@ import {
 
 import {
     Button,
-    Icon
+    Icon,
+    CheckBox
 } from 'native-base';
 
 
@@ -21,22 +22,27 @@ export default class Note extends Component {
                 {
                     id: 0,
                     task: "work",
+                    isDone: false
                 },
                 {
                     id: 1,
                     task: "swim",
+                    isDone: false
                 },
                 {
                     id: 2,
                     task: "study",
+                    isDone: false
                 },
                 {
                     id: 3,
                     task: "sleep",
+                    isDone: false
                 },
                 {
                     id: 4,
-                    task: "run"
+                    task: "run",
+                    isDone: false
                 },
             ],
             text: ''
@@ -60,6 +66,15 @@ export default class Note extends Component {
         this.setState({ noteArray: filterCek })
     }
 
+    _handlePressCheckBox = (checkList) => {
+        const { noteArray } = this.state
+        let checkedItem = noteArray.find(list => checkList.id === list.id)
+        if (checkedItem) {
+            checkedItem.isDone = !checkList.isDone
+            this.setState([...noteArray])
+        }
+    }
+
     render() {
         return (
             <View style={styles.container}>
@@ -77,6 +92,9 @@ export default class Note extends Component {
                     {this.state.noteArray.map(list => {
                         return (
                             <View key={list.id} style={styles.listNote}>
+                                <View style={styles.checkboxList}>
+                                    <CheckBox checked={list.isDone} onPress={() => this._handlePressCheckBox(list)} />
+                                </View>
                                 <Text style={styles.fontNote}>{list.task}</Text>
                                 <Icon onPress={() => this._delButton(list)} style={styles.iconTrash} name="trash" />
                             </View>
@@ -123,7 +141,13 @@ const styles = StyleSheet.create({
         paddingRight: 10,
         paddingTop: 10,
         color: 'red'
+    },
+    checkboxList: {
+        flexDirection: "row",
+        alignItems: "center",
+        paddingTop: 12
     }
+
 })
 
 
